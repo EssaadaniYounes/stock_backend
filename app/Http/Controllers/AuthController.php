@@ -38,8 +38,14 @@ class AuthController extends Controller
         if (auth()->attempt($data)) {
             $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
             $role= Role::find( auth()->user()->role_id);
-
-            return response()->json(['token' => $token,'role'=>$role], 200);
+            
+            $user = auth()
+                    ->user()
+                    ->join('roles', 'roles.id', '=', 'users.role_id')
+                    ->select('users.*', 'roles.*')
+                    ->first();
+            
+            return response()->json(['token' => $token,'data'=>$user], 200);
         } else {
             return response()->json(['success'=>false,'error' => 'Unauthorised'] );
         }
