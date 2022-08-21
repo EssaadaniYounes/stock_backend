@@ -50,7 +50,7 @@ class RoleController extends Controller
             return response()->json([
                 'success'=>true,
                 'data'=>$role
-            ],400);
+            ],200);
         }
 
 
