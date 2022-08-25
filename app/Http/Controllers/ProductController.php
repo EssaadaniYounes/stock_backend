@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products =Product::all();
+        $products =DB::table('products')
+            ->join('categories','categories.id','products.category_id')
+            ->join('vendors','vendors.id','products.vendor_id')
+            ->selectRaw(' products.*, categories.name as category_name, vendors.full_name as vendor_name')
+            ->get();
         return response([
             'success'=>true,
             'data'=>$products
@@ -98,7 +103,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if($product){
-            $updated = $product::update($request->all());
+            $updated = $product->update($request->all());
             if($updated){
                 return response()->json([
                     'success'=>true,
@@ -136,19 +141,19 @@ class ProductController extends Controller
             {
                 return response()->json([
                     'success'=>true,
-                    'data'=>'Product deleted successfully'
+                    'message'=>'Product deleted successfully'
                 ],200);
             }
             else{
                 return response()->json([
                     'success'=>false,
-                    'data'=>'Cannot delete this product'
+                    'message'=>'Cannot delete this product'
                 ],400);
             }
         }else{
             return response()->json([
                 'success'=>false,
-                'data'=>'Product not found'
+                'message'=>'Product not found'
             ],404);
         }
     }

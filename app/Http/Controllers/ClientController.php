@@ -88,7 +88,7 @@ class ClientController extends Controller
         if ($client->delete()) {
             return response()->json([
                 'success' => true,
-                'deleted'=> 'Client deleted successfully'
+                'message'=> 'Client deleted successfully'
             ],200);
         } else {
             return response()->json([

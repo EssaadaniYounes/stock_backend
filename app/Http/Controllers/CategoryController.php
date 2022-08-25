@@ -98,7 +98,8 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if($category){
-            $updated = $category::update($request->all());
+            $updated = $category->update($request->all());
+
             if($updated){
             return response()->json([
                 'success'=>true,
@@ -136,19 +137,19 @@ class CategoryController extends Controller
             {
                 return response()->json([
                     'success'=>true,
-                    'data'=>'Category deleted successfully'
+                    'message'=>'Category deleted successfully'
                 ],200);
             }
             else{
                 return response()->json([
                     'success'=>false,
-                    'data'=>'Cannot delete this category'
+                    'message'=>'Cannot delete this category'
                 ],400);
             }
         }else{
             return response()->json([
                 'success'=>false,
-                'data'=>'Category not found'
+                'message'=>'Category not found'
             ],404);
         }
     }

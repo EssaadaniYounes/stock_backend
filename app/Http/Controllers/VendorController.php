@@ -138,7 +138,7 @@ class VendorController extends Controller
         if ($vendor->delete()) {
             return response()->json([
                 'success' => true,
-                'deleted'=> 'Vendor deleted successfully'
+                'message'=> 'Vendor deleted successfully'
             ],200);
         } else {
             return response()->json([
