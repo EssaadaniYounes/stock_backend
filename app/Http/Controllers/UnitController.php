@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Unit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class ProductController extends Controller
+class UnitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,15 +14,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products =DB::table('products')
-            ->join('categories','categories.id','products.category_id')
-            ->join('vendors','vendors.id','products.vendor_id')
-            ->join('units','units.id','products.unit_id')
-            ->selectRaw(' products.*, categories.name as category_name, vendors.full_name as vendor_name, units.name as unit_name')
-            ->get();
+        $units =Unit::all();
         return response([
             'success'=>true,
-            'data'=>$products
+            'data'=>$units
         ],200);
     }
 
@@ -45,12 +39,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
-        $product = Product::create($request->all());
-        if($product){
+        $unit = Unit::create($request->all());
+        if($unit){
             return response()->json([
                 'success'=>true,
-                'data'=>$product
+                'data'=>$unit
             ],200);
         }
         else{
@@ -63,22 +56,22 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $product = Product::find($id);
-        if($product){
+        $unit = Unit::find($id);
+        if($unit){
             return response()->json([
                 'success'=>true,
-                'data'=>$product
+                'data'=>$unit
             ],200);
         }
         else{
             return response()->json([
                 'success'=>false,
-                'data'=>'Category not found'
+                'data'=>'Unit not found'
             ],404);
         }
     }
@@ -86,10 +79,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Unit $unit)
     {
         //
     }
@@ -98,24 +91,26 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        if($product){
-            $updated = $product->update($request->all());
+        $unit = Unit::find($id);
+        if($unit){
+            $updated = $unit->update($request->all());
+
             if($updated){
                 return response()->json([
                     'success'=>true,
-                    'data'=>$updated
+                    'data'=>$updated,
+                    'message'=>'unit updated successfully'
                 ],200);
             }
             else{
                 return response()->json([
                     'success'=>false,
-                    'data'=>'Cannot update this product try again!!'
+                    'message'=>'Cannot update this unit try again!!'
                 ],400);
             }
 
@@ -124,7 +119,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'success'=>false,
-                'data'=>'Product not found'
+                'message'=>'Unit not found'
             ],404);
         }
     }
@@ -132,30 +127,30 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $product=Product::find($id);
-        if($product){
-            if($product->delete())
+        $unit=Unit::find($id);
+        if($unit){
+            if($unit->delete())
             {
                 return response()->json([
                     'success'=>true,
-                    'message'=>'Product deleted successfully'
+                    'message'=>'Unit deleted successfully'
                 ],200);
             }
             else{
                 return response()->json([
                     'success'=>false,
-                    'message'=>'Cannot delete this product'
+                    'message'=>'Cannot delete this unit'
                 ],400);
             }
         }else{
             return response()->json([
                 'success'=>false,
-                'message'=>'Product not found'
+                'message'=>'Unit not found'
             ],404);
         }
     }

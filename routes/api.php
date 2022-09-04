@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +29,5 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('vendors', VendorController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('units', UnitController::class);
 });
