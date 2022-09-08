@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientsInvoicesController;
+use App\Http\Controllers\ClientsInvoicesItemsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
@@ -32,4 +33,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('units', UnitController::class);
     Route::resource('clients_invoices', ClientsInvoicesController::class);
+    Route::resource('clients_invoices_items', ClientsInvoicesItemsController::class);
+    Route::get('clients_invoices_items/items/{id}', [ClientsInvoicesItemsController::class,'getInvoiceItems']);
+
 });

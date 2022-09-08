@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClientsInvoices;
+use App\Models\ClientsInvoicesItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -45,19 +46,19 @@ class ClientsInvoicesController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = ClientsInvoices::create($request->all());
+        $invoice = ClientsInvoices::create($request->invoice);
+        $invoice_items=$request->invoice_items;
+        foreach($invoice_items as $item){
+            $item['invoice_id']=$invoice->id;
+
+            ClientsInvoicesItems::create($item);
+        }
         if($invoice){
-            return response()->json([
-                'success'=>true,
-                'data'=>$invoice,
-                'message'=>'Invoice added successfully!'
-            ],200);
+            return response()->json(['success'=>true,'data'=>$invoice],200);
         }
         else{
-            return response()->json([
-                'success'=>false,
-                'message'=>'Cannot add this invoice..try again!!!'
-            ],400);
+            return response()->json(['success'=>false,'data'=>$invoice],200);
+
         }
     }
 
@@ -80,7 +81,7 @@ class ClientsInvoicesController extends Controller
             return response()->json([
                 'success'=>true,
                 'data'=>$invoice
-            ],404);
+            ],200);
         }
     }
 
@@ -104,6 +105,7 @@ class ClientsInvoicesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        DB::table('clients_invoices_items')->where('invoice_id','=',$id)->delete();
         $invoice= ClientsInvoices::find($id);
         if(!$invoice){
             return response()->json([
@@ -112,8 +114,13 @@ class ClientsInvoicesController extends Controller
             ],404);
         }
         else{
-            $updated=$invoice->update($request->all());
+            $updated=$invoice->update($request->invoice);
+            $invoice_items=$request->invoice_items;
             if($updated){
+                foreach ($invoice_items as $item){
+                    $item['invoice_id']=$invoice->id;
+                    ClientsInvoicesItems::create($item);
+                }
                 return response()->json(
                     [
                         'success'=>true,
