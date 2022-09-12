@@ -21,6 +21,7 @@ class CreateClientsInvoicesItemsTable extends Migration
             $table->double('price');
             $table->double('quantity');
             $table->double('amount');
+            $table->string('company_id');
             $table->timestamps();
         });
     }

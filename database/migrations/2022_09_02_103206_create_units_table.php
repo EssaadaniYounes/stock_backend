@@ -17,6 +17,7 @@ class CreateUnitsTable extends Migration
             $table->id();
             $table->string('symbol');
             $table->string('name');
+            $table->string('company_id');
             $table->timestamps();
         });
     }

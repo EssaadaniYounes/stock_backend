@@ -23,6 +23,7 @@ class CreateVendorsTable extends Migration
             $table->string('tel');
             $table->string('email');
             $table->string('ice');
+            $table->string('company_id');
             $table->timestamps();
         });
     }

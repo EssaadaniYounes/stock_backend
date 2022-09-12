@@ -16,8 +16,8 @@ class RoleSeeder extends Seeder
     {
         $role = Role::create([
             'role_name' => 'Admin',
-            'permissions' => '{"roles": ["read", "update", "delete", "create"], "units": ["read", "update", "create", "delete"], "users": ["update", "delete", "create", "read"], "clients": ["create", "update", "read", "delete"], "vendors": ["create", "read", "update", "delete"], "invoices": ["create", "read", "update", "delete"], "products": ["create", "read", "update", "delete"], "dashboard": ["read", "update", "create", "delete"], "categories": ["read", "update", "create", "delete"]}'
-
+            'permissions' => '{"roles": ["read", "update", "delete", "create"], "units": ["read", "update", "create", "delete"], "users": ["update", "delete", "create", "read"], "clients": ["create", "update", "read", "delete"], "vendors": ["create", "read", "update", "delete"], "invoices": ["create", "read", "update", "delete"], "products": ["create", "read", "update", "delete"], "dashboard": ["read", "update", "create", "delete"], "categories": ["read", "update", "create", "delete"]}',
+            'company_id'=>1
         ]);
     }
 }

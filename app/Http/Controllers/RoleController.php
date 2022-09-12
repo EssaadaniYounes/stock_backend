@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
@@ -14,7 +15,10 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
+        $company_id = auth()->user()->company_id;
+        $roles =DB::table('roles')
+            ->where('company_id','=',$company_id)
+            ->get();
         return response()->json([
             'success'=>true,
             'data'=>$roles
@@ -39,7 +43,9 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $role = Role::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $role = Role::create($data);
         if(!$role){
             return response()->json([
                 'success'=>false,
@@ -62,9 +68,21 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        //
+        $role = Role::find($id);
+        if($role){
+            return response()->json([
+                'success'=>true,
+                'data'=>$role
+            ],200);
+        }
+        else{
+            return response()->json([
+                'success'=>false,
+                'data'=>'Role not found'
+            ],404);
+        }
     }
 
     /**
@@ -88,7 +106,7 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::find($id);
-        if(!role){
+        if(!$role){
             return response()->json([
                 'success'=>false,
                 'data'=>'Cannot find role with this id!'

@@ -10,7 +10,10 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Client::all();
+        $company_id = auth()->user()->company_id;
+        $clients = DB::table('clients')
+            ->where('company_id','=',$company_id)
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -36,7 +39,9 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
-        $client=Client::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $client=Client::create($data);
         if ($client)
             return response()->json([
                 'success' => true,

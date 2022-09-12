@@ -17,5 +17,6 @@ class Client extends Model
         'tel',
         'email',
         'ice',
+        'company_id'
     ];
 }

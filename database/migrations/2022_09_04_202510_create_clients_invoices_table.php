@@ -21,6 +21,8 @@ class CreateClientsInvoicesTable extends Migration
             $table->string('invoice_date');
             $table->double('total');
             $table->json('discount');
+            $table->string('create_by');
+            $table->string('company_id');
             $table->timestamps();
         });
     }

@@ -15,11 +15,13 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $company_id = auth()->user()->company_id;
         $products =DB::table('products')
             ->join('categories','categories.id','products.category_id')
             ->join('vendors','vendors.id','products.vendor_id')
             ->join('units','units.id','products.unit_id')
             ->selectRaw(' products.*, categories.name as category_name, vendors.full_name as vendor_name, units.name as unit_name')
+            ->where('company_id','=',$company_id)
             ->get();
         return response([
             'success'=>true,
@@ -45,8 +47,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
-        $product = Product::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $product = Product::create($data);
         if($product){
             return response()->json([
                 'success'=>true,

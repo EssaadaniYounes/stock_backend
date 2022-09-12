@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClientsInvoices;
 use App\Models\ClientsInvoicesItems;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,9 +17,11 @@ class ClientsInvoicesController extends Controller
      */
     public function index()
     {
+        $company_id = auth()->user()->company_id;
         $invoices= DB::table('clients_invoices')
             ->join('clients','clients.id','=','clients_invoices.client_id')
             ->selectRaw('clients_invoices.*, clients.full_name as client_name')
+            ->where('company_id','=',$company_id)
             ->get();
 
         return response()->json([
@@ -46,11 +49,19 @@ class ClientsInvoicesController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = ClientsInvoices::create($request->invoice);
+        $invoice_data = $request->invoice;
+        $invoice_data['created_by'] = auth()->user()->id;
+        $invoice_data['company_id']=auth()->user()->company_id;
+        $invoice = ClientsInvoices::create($invoice_data);
+
         $invoice_items=$request->invoice_items;
         foreach($invoice_items as $item){
             $item['invoice_id']=$invoice->id;
-
+            $product= Product::find($item['product_id']);
+            if($product){
+                $product->quantity_initial = $product->quantity_initial - $item['quantity'];
+                $product->save();
+            }
             ClientsInvoicesItems::create($item);
         }
         if($invoice){
@@ -105,20 +116,30 @@ class ClientsInvoicesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::table('clients_invoices_items')->where('invoice_id','=',$id)->delete();
+        //DB::table('clients_invoices_items')->where('invoice_id','=',$id)->delete();
         $invoice= ClientsInvoices::find($id);
         if(!$invoice){
             return response()->json([
                 'success'=>false,
-                'message'=>'This invoice not found!'
+                'message'=>'Invoice not found!'
             ],404);
         }
         else{
-            $updated=$invoice->update($request->invoice);
+            $invoice_data = $request->invoice;
+            $invoice_data['created_by'] = auth()->user()->id;
+            $updated=$invoice->update($invoice_data);
             $invoice_items=$request->invoice_items;
             if($updated){
                 foreach ($invoice_items as $item){
+                    $old_item = ClientsInvoicesItems::find($item['id']);
                     $item['invoice_id']=$invoice->id;
+                    $product= Product::find($item['product_id']);
+                    if($product){
+                        $product->quantity_initial = $product->quantity_initial + $old_item->quantity;
+                        $product->quantity_initial=$product->quantity_initial-$item['quantity'];
+                        $product->save();
+                    }
+                    $old_item->delete();
                     ClientsInvoicesItems::create($item);
                 }
                 return response()->json(

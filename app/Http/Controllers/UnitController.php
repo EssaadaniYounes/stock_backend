@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UnitController extends Controller
 {
@@ -14,7 +15,10 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units =Unit::all();
+        $company_id = auth()->user()->company_id;
+        $units =DB::table('units')
+            ->where('company_id','=',$company_id)
+            ->get();
         return response([
             'success'=>true,
             'data'=>$units
@@ -39,7 +43,9 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-        $unit = Unit::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $unit = Unit::create($data);
         if($unit){
             return response()->json([
                 'success'=>true,

@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin',
             'role_id' => 1,
+            'company_id'=>1,
             'password' => bcrypt('1234')
         ]);
 

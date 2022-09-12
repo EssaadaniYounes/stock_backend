@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -14,7 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories =Category::all();
+        $company_id = auth()->user()->company_id;
+        $categories =DB::table('categories')
+            ->where('company_id','=',$company_id)
+            ->get();
         return response([
             'success'=>true,
             'data'=>$categories
@@ -39,7 +43,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $category = Category::create($data);
         if($category){
             return response()->json([
                 'success'=>true,

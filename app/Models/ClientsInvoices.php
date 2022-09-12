@@ -14,7 +14,9 @@ class ClientsInvoices extends Model
         'notes',
         'invoice_date',
         'total',
-        'discount'
+        'discount',
+        'created_by',
+        'company_id'
     ];
 }
 

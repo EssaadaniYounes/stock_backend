@@ -17,5 +17,6 @@ class Vendor extends Model
         'tel',
         'email',
         'ice',
+        'company_id'
     ];
 }

@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('quantity_initial');
             $table->string('unit_id');
+            $table->string('company_id');
             $table->timestamps();
         });
     }

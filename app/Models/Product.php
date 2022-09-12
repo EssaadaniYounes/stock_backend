@@ -15,5 +15,6 @@ class Product extends Model
         'name',
         'quantity_initial',
         'unit_id',
+        'company_id'
     ];
 }

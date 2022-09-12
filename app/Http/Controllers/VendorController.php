@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VendorController extends Controller
 {
@@ -14,7 +15,10 @@ class VendorController extends Controller
      */
     public function index()
     {
-        $vendors= Vendor::all();
+        $company_id = auth()->user()->company_id;
+        $vendors =DB::table('vendors')
+            ->where('company_id','=',$company_id)
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -40,7 +44,9 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-        $vendor=Vendor::create($request->all());
+        $data=$request->all();
+        $data['company_id']=auth()->user()->company_id;
+        $vendor=Vendor::create($data);
         if ($vendor)
             return response()->json([
                 'success' => true,
