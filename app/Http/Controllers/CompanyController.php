@@ -136,7 +136,7 @@ class CompanyController extends Controller
         if($request->hasFile('logo')){
             $file = $request->file('logo');
             $file_name = $file->getClientOriginalName();
-            $file->move(storage_path('images/companies'), $file_name);
+            $file->move(public_path('images/companies'), $file_name);
             return response()->json([
                 'message' => 'file uploaded',
                 'file' => $file_name
