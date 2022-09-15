@@ -21,7 +21,7 @@ class ProductController extends Controller
             ->join('vendors','vendors.id','products.vendor_id')
             ->join('units','units.id','products.unit_id')
             ->selectRaw(' products.*, categories.name as category_name, vendors.full_name as vendor_name, units.name as unit_name')
-            ->where('company_id','=',$company_id)
+            ->where('products.company_id','=',$company_id)
             ->get();
         return response([
             'success'=>true,
