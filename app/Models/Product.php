@@ -15,6 +15,10 @@ class Product extends Model
         'name',
         'quantity_initial',
         'unit_id',
-        'company_id'
+        'company_id',
+        'clients_invoices_qty',
+        'suppliers_invoices_qty',
+        'clients_returns_qty',
+        'suppliers_returns_qty'
     ];
 }

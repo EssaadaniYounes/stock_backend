@@ -15,6 +15,8 @@ class ClientsInvoicesItems extends Model
         'price',
         'quantity',
         'amount',
-        'company_id'
+        'company_id',
+        'tax_amount',
+        'amount_total'
     ];
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClientsInvoicesItems;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -86,8 +87,30 @@ class ClientsInvoicesItemsController extends Controller
      * @param  \App\Models\ClientsInvoicesItems  $clientsInvoicesItems
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClientsInvoicesItems $clientsInvoicesItems)
+    public function destroy($id)
     {
-        //
+        $invoice_item=ClientsInvoicesItems::find($id);
+        if($invoice_item){
+            $product = Product::find($invoice_item->product_id);
+            $product->clients_invoices_qty = $product->clients_invoices_qty-$invoice_item->quantity;
+            $product->save();
+            if ($invoice_item->delete()) {
+                return response()->json([
+                    'success' => true,
+                    'message'=> 'Invoice item deleted successfully'
+                ],200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invoice item can not be deleted'
+                ], 400);
+            }
+        }
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Invoice item not found!'
+            ], 404);
+        }
     }
 }

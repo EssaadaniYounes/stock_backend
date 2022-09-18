@@ -49,17 +49,19 @@ class ClientsInvoicesController extends Controller
      */
     public function store(Request $request)
     {
+        $company_id=auth()->user()->company_id;
         $invoice_data = $request->invoice;
         $invoice_data['created_by'] = auth()->user()->id;
-        $invoice_data['company_id']=auth()->user()->company_id;
+        $invoice_data['company_id'] = $company_id;
         $invoice = ClientsInvoices::create($invoice_data);
 
         $invoice_items=$request->invoice_items;
         foreach($invoice_items as $item){
             $item['invoice_id']=$invoice->id;
+            $item['company_id']=$company_id;
             $product= Product::find($item['product_id']);
             if($product){
-                $product->quantity_initial = $product->quantity_initial - $item['quantity'];
+                $product->clients_invoices_qty = $product->clients_invoices_qty + $item['quantity'];
                 $product->save();
             }
             ClientsInvoicesItems::create($item);
@@ -131,16 +133,22 @@ class ClientsInvoicesController extends Controller
             $invoice_items=$request->invoice_items;
             if($updated){
                 foreach ($invoice_items as $item){
-                    $old_item = ClientsInvoicesItems::find($item['id']);
-                    $item['invoice_id']=$invoice->id;
-                    $product= Product::find($item['product_id']);
-                    if($product){
-                        $product->quantity_initial = $product->quantity_initial + $old_item->quantity;
-                        $product->quantity_initial=$product->quantity_initial-$item['quantity'];
-                        $product->save();
+                    $product = Product::find($item['product_id']);
+                    $item['invoice_id'] = $invoice->id;
+                    $item['company_id'] = auth()->user()->company_id;;
+                    if( isset($item['id'])){
+                        $old_item = ClientsInvoicesItems::find($item['id']);
+                        if($old_item != null){
+                            $dif_qty = $item['quantity'] - $old_item['quantity'];
+                            $product->clients_invoices_qty = $product->clients_invoices_qty + $dif_qty;
+                            $old_item->delete();
+                        }
                     }
-                    $old_item->delete();
+                    else{
+                        $product->clients_invoices_qty = $product->clients_invoices_qty +  $item['quantity'];
+                    }
                     ClientsInvoicesItems::create($item);
+                    $product->save();
                 }
                 return response()->json(
                     [

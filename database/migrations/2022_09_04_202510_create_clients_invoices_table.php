@@ -17,11 +17,11 @@ class CreateClientsInvoicesTable extends Migration
             $table->id();
             $table->string('client_id');
             $table->string('invoice_num');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->string('invoice_date');
             $table->double('total');
-            $table->json('discount');
-            $table->string('create_by');
+            $table->double('discount')->nullable();
+            $table->string('created_by');
             $table->string('company_id');
             $table->timestamps();
         });
