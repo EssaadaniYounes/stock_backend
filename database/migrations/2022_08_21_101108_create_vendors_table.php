@@ -18,7 +18,7 @@ class CreateVendorsTable extends Migration
             $table->string('full_name');
             $table->string('street');
             $table->string('zip_code');
-            $table->string('city');
+            $table->string('city_id');
             $table->string('address');
             $table->string('tel');
             $table->string('email');

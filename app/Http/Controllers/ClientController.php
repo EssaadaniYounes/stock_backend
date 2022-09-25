@@ -12,7 +12,9 @@ class ClientController extends Controller
     {
         $company_id = auth()->user()->company_id;
         $clients = DB::table('clients')
-            ->where('company_id','=',$company_id)
+            ->join('cities','cities.id','clients.city_id')
+            ->selectRaw('clients.*, cities.name as city')
+            ->where('clients.company_id','=',$company_id)
             ->get();
 
         return response()->json([
@@ -36,7 +38,39 @@ class ClientController extends Controller
             'data' => $clients
         ], 200);
     }
-
+    public function getBalance($id){
+        $company_id=auth()->user()->company_id;
+        $balances = DB::table('clients_invoices_items')
+            ->join('clients_invoices','clients_invoices.id','=','clients_invoices_items.invoice_id')
+            ->join('clients','clients.id','clients_invoices.client_id')
+            ->selectRaw('clients_invoices_items.*,
+                clients_invoices.invoice_num,
+                MONTH(clients_invoices_items.dt) as month,
+                DAY(clients_invoices_items.dt) as day
+                ')
+            ->where([
+                ['clients.id','=',$id],
+                ['clients.company_id','=',$company_id]
+            ])
+            ->get();
+        $invoices= DB::table('clients_invoices')
+            ->join('clients','clients.id','=','clients_invoices.client_id')
+            ->selectRaw('clients_invoices.*,
+                                  clients.full_name as client_name,
+                                  MONTH(clients_invoices.invoice_date) as month,
+                                  DAY(clients_invoices.invoice_date) as day
+                                  ')
+            ->where([
+                ['clients.id','=',$id],
+                ['clients.company_id','=',$company_id]
+            ])
+            ->get();
+        return response()->json([
+            'success'=>true,
+            'data'=>$balances,
+            'invoices'=>$invoices
+        ],200);
+    }
     public function store(Request $request)
     {
         $data=$request->all();

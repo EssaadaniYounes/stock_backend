@@ -13,8 +13,10 @@ class ClientsInvoicesItems extends Model
         'product_id',
         'invoice_id',
         'price',
+        'dt',
         'quantity',
         'amount',
+        'discount',
         'company_id',
         'tax_amount',
         'amount_total'

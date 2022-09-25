@@ -12,7 +12,7 @@ class Client extends Model
         'full_name',
         'street',
         'zip_code',
-        'city',
+        'city_id',
         'address',
         'tel',
         'email',

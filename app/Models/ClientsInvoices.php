@@ -13,10 +13,16 @@ class ClientsInvoices extends Model
         'invoice_num',
         'notes',
         'invoice_date',
-        'total',
-        'discount',
+        'total_amount',
+        'total_discount',
+        'total_tax',
+        'total_with_tax',
+        'paid_amount',
+        'rest_amount',
+        'method_id',
         'created_by',
         'company_id'
     ];
 }
+
 

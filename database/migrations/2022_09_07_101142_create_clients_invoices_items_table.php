@@ -19,8 +19,10 @@ class CreateClientsInvoicesItemsTable extends Migration
             $table->string('product_id');
             $table->string('invoice_id');
             $table->double('price');
+            $table->dateTime('dt');
             $table->double('quantity');
             $table->double('amount');
+            $table->double('discount')->default(0);
             $table->double('tax_amount');
             $table->double('amount_total');
             $table->string('company_id');

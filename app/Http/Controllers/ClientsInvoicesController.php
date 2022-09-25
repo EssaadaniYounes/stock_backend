@@ -59,6 +59,7 @@ class ClientsInvoicesController extends Controller
         foreach($invoice_items as $item){
             $item['invoice_id']=$invoice->id;
             $item['company_id']=$company_id;
+            $item['dt']=$invoice_data['invoice_date'];
             $product= Product::find($item['product_id']);
             if($product){
                 $product->clients_invoices_qty = $product->clients_invoices_qty + $item['quantity'];
@@ -135,7 +136,8 @@ class ClientsInvoicesController extends Controller
                 foreach ($invoice_items as $item){
                     $product = Product::find($item['product_id']);
                     $item['invoice_id'] = $invoice->id;
-                    $item['company_id'] = auth()->user()->company_id;;
+                    $item['company_id'] = auth()->user()->company_id;
+                    $item['dt']=$invoice_data['invoice_date'];
                     if( isset($item['id'])){
                         $old_item = ClientsInvoicesItems::find($item['id']);
                         if($old_item != null){

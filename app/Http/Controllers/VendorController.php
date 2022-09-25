@@ -17,7 +17,9 @@ class VendorController extends Controller
     {
         $company_id = auth()->user()->company_id;
         $vendors =DB::table('vendors')
-            ->where('company_id','=',$company_id)
+            ->join('cities','cities.id','vendors.city_id')
+            ->selectRaw('vendors.*, cities.name as city')
+            ->where('vendors.company_id','=',$company_id)
             ->get();
 
         return response()->json([

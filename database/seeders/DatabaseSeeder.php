@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
-            ConfigSeeder::class
+            ConfigSeeder::class,
+            PayMethodSeeder::class,
         ]);
     }
 }
