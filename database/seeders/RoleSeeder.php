@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
     {
         $role = Role::create([
             'role_name' => 'Admin',
-            'permissions' => '{"roles": ["create", "read", "update", "delete"], "units": ["create", "read", "update", "delete"], "users": ["create", "read", "update", "delete"], "clients": ["create", "read", "update", "delete"], "vendors": ["create", "read", "update", "delete"], "invoices": ["create", "read", "update", "delete", "print"], "products": ["create", "read", "update", "delete"], "companies": ["create", "read", "update", "delete"], "dashboard": ["create", "read", "update", "delete"], "categories": ["create", "read", "update", "delete"]}',
+            'permissions' => '{"roles": ["create", "read", "update", "delete"], "units": ["create", "read", "update", "delete"], "users": ["create", "read", "update", "delete"], "clients": ["create", "read", "update", "delete"], "vendors": ["create", "read", "update", "delete"], "products": ["create", "read", "update", "delete"], "companies": ["create", "read", "update", "delete"], "dashboard": ["create", "read", "update", "delete"], "categories": ["create", "read", "update", "delete"], "pay_methods": ["create", "read", "update", "delete"], "clients_invoices": ["create", "read", "update", "delete", "print"]}',
             'company_id'=>1
         ]);
     }
