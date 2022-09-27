@@ -19,6 +19,8 @@ class Product extends Model
         'clients_invoices_qty',
         'suppliers_invoices_qty',
         'clients_returns_qty',
-        'suppliers_returns_qty'
+        'suppliers_returns_qty',
+        'sell_price',
+        'buy_price'
     ];
 }

@@ -57,8 +57,12 @@ class AuthController extends Controller
             $user = auth()
                     ->user()
                     ->join('roles', 'roles.id', '=', 'users.role_id')
-                    ->where('users.id','=',auth()->user()->id)
-                    ->select('users.*', 'roles.role_name','roles.permissions')
+                    ->join('companies','companies.id','=','users.company_id')
+                    ->where([
+                        ['users.id','=',auth()->user()->id],
+                        ['users.company_id','=',auth()->user()->company_id]
+                    ])
+                    ->select('users.*', 'roles.role_name','roles.permissions', 'companies.company_name')
                     ->first();
 
             return response()->json(['success'=>true,'token' => $token,'data'=>$user], 200);
