@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\VendorsInvoiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,7 @@ Route::resource('companies', CompanyController::class);
     Route::resource('cities', CityController::class);
     Route::resource('pay_methods', PayMethodController::class);
     Route::resource('clients_invoices', ClientsInvoicesController::class);
+    Route::resource('vendors_invoices', VendorsInvoiceController::class);
     Route::resource('clients_invoices_items', ClientsInvoicesItemsController::class);
     Route::get('clients_invoices_items/items/{id}', [ClientsInvoicesItemsController::class,'getInvoiceItems']);
     Route::post('companies/store_imgs', [CompanyController::class,'store_imgs']);
