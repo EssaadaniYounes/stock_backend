@@ -20,8 +20,8 @@ class ClientsInvoicesController extends Controller
         $company_id = auth()->user()->company_id;
         $invoices= DB::table('clients_invoices')
             ->join('clients','clients.id','=','clients_invoices.client_id')
-            ->join('users','users.id','=','vendors_invoices.created_by')
-            ->selectRaw('clients_invoices.*, clients.full_name as client_name,users.* as user')
+            ->join('users','users.id','=','clients_invoices.created_by')
+            ->selectRaw('clients_invoices.*, clients.full_name as client_name,users.name as user')
             ->where('clients_invoices.company_id','=',$company_id)
             ->get();
 
