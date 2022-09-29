@@ -14,6 +14,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorsInvoiceController;
+use App\Http\Controllers\VendorsInvoicesItemsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,8 @@ Route::resource('companies', CompanyController::class);
     Route::resource('vendors_invoices', VendorsInvoiceController::class);
     Route::resource('clients_invoices_items', ClientsInvoicesItemsController::class);
     Route::get('clients_invoices_items/items/{id}', [ClientsInvoicesItemsController::class,'getInvoiceItems']);
+    Route::resource('vendors_invoices_items', VendorsInvoicesItemsController::class);
+    Route::get('vendors_invoices_items/items/{id}', [VendorsInvoicesItemsController::class,'getInvoiceItems']);
     Route::post('companies/store_imgs', [CompanyController::class,'store_imgs']);
 
 });
