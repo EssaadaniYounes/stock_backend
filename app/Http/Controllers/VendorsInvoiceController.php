@@ -74,7 +74,6 @@ class VendorsInvoiceController extends Controller
         }
         else{
             return response()->json(['success'=>false,'data'=>$invoice],200);
-
         }
     }
 

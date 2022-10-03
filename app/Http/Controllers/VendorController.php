@@ -27,7 +27,21 @@ class VendorController extends Controller
             'data' => $vendors
         ],200);
     }
+    public function relatedItems()
+    {
 
+        $cities = DB::table('cities')
+            ->selectRaw('cities.id as value,cities.name as label')
+            ->where('cities.company_id','=',auth()->user()->company_id)
+            ->get();
+
+        return response()->json([
+            'success'=>true,
+            'data'=>[
+                'cities'=>$cities
+            ]
+        ],200);
+    }
     /**
      * Show the form for creating a new resource.
      *

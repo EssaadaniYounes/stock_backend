@@ -21,6 +21,20 @@ class AuthController extends Controller
             'company_id'=>$company_id,
         ],200);
     }
+
+    public function relatedItems(){
+        $roles = DB::table('roles')
+            ->selectRaw('roles.id as value,roles.role_name as label')
+            ->where('roles.company_id','=',auth()->user()->company_id)
+            ->get();
+
+        return response()->json([
+            'success'=>true,
+            'data'=>[
+                'roles'=>$roles
+            ]
+        ],200);
+    }
     /**
      * Registration
      */

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Unit;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +29,36 @@ class ProductController extends Controller
         return response([
             'success'=>true,
             'data'=>$products
+        ],200);
+    }
+
+    public function relatedItems()
+    {
+        $units = DB::table('units')
+        ->selectRaw('units.id as value,units.name as label')
+            ->where('units.company_id','=',auth()->user()->company_id)
+        ->get();
+        $categories = DB::table('categories')
+            ->selectRaw('categories.id as value,categories.name as label')
+            ->where('categories.company_id','=',auth()->user()->company_id)
+            ->get();
+        $vendors = DB::table('vendors')
+            ->selectRaw('vendors.id as value,vendors.full_name as label')
+            ->where('vendors.company_id','=',auth()->user()->company_id)
+            ->get();
+        $cities = DB::table('cities')
+            ->selectRaw('cities.id as value,cities.name as label')
+            ->where('cities.company_id','=',auth()->user()->company_id)
+            ->get();
+
+        return response()->json([
+            'success'=>true,
+            'data'=>[
+                'units'=>$units,
+                'categories'=>$categories,
+                'vendors'=>$vendors,
+                'cities'=>$cities
+            ]
         ],200);
     }
 
@@ -81,7 +114,7 @@ class ProductController extends Controller
         else{
             return response()->json([
                 'success'=>false,
-                'data'=>'Category not found'
+                'data'=>'Product not found'
             ],404);
         }
     }

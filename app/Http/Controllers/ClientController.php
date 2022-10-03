@@ -22,6 +22,21 @@ class ClientController extends Controller
             'data' => $clients
         ],200);
     }
+    public function relatedItems()
+    {
+
+        $cities = DB::table('cities')
+            ->selectRaw('cities.id as value,cities.name as label')
+            ->where('cities.company_id','=',auth()->user()->company_id)
+            ->get();
+
+        return response()->json([
+            'success'=>true,
+            'data'=>[
+                'cities'=>$cities
+            ]
+        ],200);
+    }
     public function show($id)
     {
         $clients=Client::find($id);
