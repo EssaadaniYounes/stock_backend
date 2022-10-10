@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RelatedItems;
 use App\Models\ClientsInvoices;
 use App\Models\ClientsInvoicesItems;
 use App\Models\Product;
@@ -30,7 +31,16 @@ class ClientsInvoicesController extends Controller
             'data'=>$invoices
         ],200);
     }
+    public function relatedItems(){
+        $company_id = auth()->user()->company_id;
 
+        $invoices = new RelatedItems();
+        $data = $invoices->invoiceRelatedItems($company_id);
+        return response()->json([
+            "success"=>true,
+            "data"=> $data
+        ],200);
+    }
 
     /**
      * Show the form for creating a new resource.

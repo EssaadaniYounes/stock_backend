@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RelatedItems;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,11 +30,8 @@ class VendorController extends Controller
     }
     public function relatedItems()
     {
-
-        $cities = DB::table('cities')
-            ->selectRaw('cities.id as value,cities.name as label')
-            ->where('cities.company_id','=',auth()->user()->company_id)
-            ->get();
+        $relatedItems= new RelatedItems();
+        $cities = $relatedItems->clientsVendorsRelatedItems();
 
         return response()->json([
             'success'=>true,

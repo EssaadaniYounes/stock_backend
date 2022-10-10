@@ -81,7 +81,17 @@ class PayMethodController extends Controller
             ],404);
         }
     }
-
+    public function makeDefault(Request $request,$id){
+        $methods= PayMethod::all();
+        $new_method = PayMethod::find($id);
+        foreach($methods as $method){
+            if($method->id!=$id && $method->is_default==1){
+                $method->update(['is_default' => 0]);
+            }
+        }
+        $updated = $new_method->update(['is_default' => 1]);
+        return response()->json(['success'=>$updated],200);
+    }
     /**
      * Show the form for editing the specified resource.
      *

@@ -17,6 +17,7 @@ class CreatePayMethodsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('company_id');
+            $table->string('is_default')->default(0);
             $table->timestamps();
         });
     }

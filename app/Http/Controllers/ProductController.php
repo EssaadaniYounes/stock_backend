@@ -34,21 +34,22 @@ class ProductController extends Controller
 
     public function relatedItems()
     {
+        $company_id = auth()->user()->company_id;
         $units = DB::table('units')
         ->selectRaw('units.id as value,units.name as label')
-            ->where('units.company_id','=',auth()->user()->company_id)
+            ->where('units.company_id','=',$company_id)
         ->get();
         $categories = DB::table('categories')
             ->selectRaw('categories.id as value,categories.name as label')
-            ->where('categories.company_id','=',auth()->user()->company_id)
+            ->where('categories.company_id','=',$company_id)
             ->get();
         $vendors = DB::table('vendors')
             ->selectRaw('vendors.id as value,vendors.full_name as label')
-            ->where('vendors.company_id','=',auth()->user()->company_id)
+            ->where('vendors.company_id','=',$company_id)
             ->get();
         $cities = DB::table('cities')
             ->selectRaw('cities.id as value,cities.name as label')
-            ->where('cities.company_id','=',auth()->user()->company_id)
+            ->where('cities.company_id','=',$company_id)
             ->get();
 
         return response()->json([
@@ -83,6 +84,10 @@ class ProductController extends Controller
         $data=$request->all();
         $data['company_id']=auth()->user()->company_id;
         $product = Product::create($data);
+
+        $unit= Unit::find($product->unit_id);
+        $product['unit_name']=$unit->name;
+
         if($product){
             return response()->json([
                 'success'=>true,

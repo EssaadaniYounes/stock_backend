@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RelatedItems;
 use App\Models\Product;
 use App\Models\VendorsInvoice;
 use App\Models\VendorsInvoicesItems;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class VendorsInvoiceController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +33,17 @@ class VendorsInvoiceController extends Controller
         ],200);
 
     }
+    public function relatedItems(){
+        $company_id = auth()->user()->company_id;
 
+        $invoices = new RelatedItems();
+        $data = $invoices->invoiceRelatedItems($company_id);
+        return response()->json([
+            "success"=>true,
+            "data"=> $data
+        ],200);
+
+    }
     /**
      * Show the form for creating a new resource.
      *
