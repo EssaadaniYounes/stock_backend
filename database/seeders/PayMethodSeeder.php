@@ -15,7 +15,7 @@ class PayMethodSeeder extends Seeder
     public function run()
     {
         $payMethods=[
-            ['name'=>"Credit",'company_id'=>1],
+            ['name'=>"Credit",'company_id'=>1,'is_default'=>1],
             ['name'=>"Cash",'company_id'=>1],
             ['name'=>"Card",'company_id'=>1]
         ];
