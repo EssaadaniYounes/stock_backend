@@ -57,11 +57,13 @@ class ClientController extends Controller
         $company_id=auth()->user()->company_id;
         $balances = DB::table('clients_invoices_items')
             ->join('clients_invoices','clients_invoices.id','=','clients_invoices_items.invoice_id')
+            ->join('pay_methods','pay_methods.id','=','clients_invoices.method_id')
             ->join('clients','clients.id','clients_invoices.client_id')
             ->selectRaw('clients_invoices_items.*,
                 clients_invoices.invoice_num,
                 MONTH(clients_invoices_items.dt) as month,
-                DAY(clients_invoices_items.dt) as day
+                DAY(clients_invoices_items.dt) as day,
+                pay_methods.name as method_name
                 ')
             ->where([
                 ['clients.id','=',$id],

@@ -27,9 +27,11 @@ class VendorsInvoiceController extends Controller
             ->selectRaw('vendors.full_name as vendor_name, vendors_invoices.*,users.name as user')
             ->where('vendors_invoices.company_id','=',$company_id)
             ->get();
+        $invoices = new RelatedItems();
+        $data = $invoices->invoiceRelatedItems($company_id);
         return response([
             'success'=>true,
-            'data'=>$bls
+            'data'=>['bls'=>$bls,'vendors'=>$data['vendors']]
         ],200);
 
     }
