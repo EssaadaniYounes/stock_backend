@@ -71,15 +71,30 @@ class VendorsInvoiceController extends Controller
         $invoice = VendorsInvoice::create($invoice_data);
 
         $invoice_items = $request->invoice_items;
+        $un_existed_products = $request->un_existed_products;
 
         foreach($invoice_items as $item){
             $item['invoice_id']=$invoice->id;
             $item['company_id']=$company_id;
             $item['dt']=$invoice_data['invoice_date'];
-            $product= Product::find($item['product_id']);
-            if($product){
-                $product->suppliers_invoices_qty = $product->suppliers_invoices_qty + $item['quantity'];
-                $product->save();
+            if($item['is_existed'])
+            {
+                $product= Product::find($item['product_id']);
+                if($product){
+                    $product->suppliers_invoices_qty = $product->suppliers_invoices_qty + $item['quantity'];
+                    $product->save();
+                }
+            }
+            else
+            {
+                foreach ($un_existed_products as $un_existed_product){
+                    if($un_existed_product['temporary_id'] == $item['product_id']){
+                        $un_existed_product['company_id'] = $company_id;
+                        $un_existed_product['suppliers_invoices_qty'] = $item['quantity'];
+                        $product= Product::create($un_existed_product);
+                        $item['product_id'] = $product->id;
+                    }
+                }
             }
             VendorsInvoicesItems::create($item);
         }
@@ -142,29 +157,52 @@ class VendorsInvoiceController extends Controller
             ],404);
         }
         else{
+            $company_id = auth()->user()->id;
+
             $invoice_data = $request->invoice;
-            $invoice_data['created_by'] = auth()->user()->id;
-            $updated=$invoice->update($invoice_data);
+            $un_existed_products = $request->un_existed_products;
             $invoice_items=$request->invoice_items;
+
+            $invoice_data['created_by'] = $company_id ;
+            $updated=$invoice->update($invoice_data);
+
             if($updated){
                 foreach ($invoice_items as $item){
-                    $product = Product::find($item['product_id']);
                     $item['invoice_id'] = $invoice->id;
-                    $item['company_id'] = auth()->user()->company_id;
+                    $item['company_id'] = $company_id;
                     $item['dt']=$invoice_data['invoice_date'];
+
                     if( isset($item['id'])){
+                        $product = Product::find($item['product_id']);
                         $old_item = VendorsInvoicesItems::find($item['id']);
                         if($old_item != null){
                             $dif_qty = $item['quantity'] - $old_item['quantity'];
                             $product->suppliers_invoices_qty = $product->suppliers_invoices_qty + $dif_qty;
                             $old_item->delete();
                         }
+                        $product->save();
                     }
                     else{
-                        $product->suppliers_invoices_qty = $product->suppliers_invoices_qty +  $item['quantity'];
+                        if($item['is_existed'])
+                        {
+                            $product= Product::find($item['product_id']);
+                            if($product){
+                                $product->suppliers_invoices_qty = $product->suppliers_invoices_qty + $item['quantity'];
+                                $product->save();
+                            }
+                        }
+                        else{
+                            foreach ($un_existed_products as $un_existed_product){
+                                if($un_existed_product['temporary_id'] == $item['product_id']){
+                                    $un_existed_product['company_id'] = $company_id;
+                                    $un_existed_product['suppliers_invoices_qty'] = $item['quantity'];
+                                    $product= Product::create($un_existed_product);
+                                    $item['product_id'] = $product->id;
+                                }
+                            }
+                        }
                     }
                     VendorsInvoicesItems::create($item);
-                    $product->save();
                 }
                 return response()->json(
                     [
@@ -181,6 +219,11 @@ class VendorsInvoiceController extends Controller
         }
     }
 
+    public function testUpdate(Request $request, $id)
+    {
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -190,6 +233,7 @@ class VendorsInvoiceController extends Controller
     public function destroy($id)
     {
         $invoice = VendorsInvoice::find($id);
+
         if(!$invoice){
             return response()->json([
                 'success'=>false,

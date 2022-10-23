@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ConfigSeeder::class,
             PayMethodSeeder::class,
+            ReportTypesSeeder::class,
         ]);
     }
 }

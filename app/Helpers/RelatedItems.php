@@ -44,7 +44,10 @@ class RelatedItems
             ->selectRaw('categories.id as value,categories.name as label')
             ->where('categories.company_id','=',$this->company_id)
             ->get();
-
+        $reportTypes= DB::table('report_types')
+            ->selectRaw('report_types.*')
+            ->where('report_types.company_id','=',$this->company_id)
+            ->get();
         return [
             'vendors'=>$vendors,
             'clients'=>$clients,
@@ -52,7 +55,8 @@ class RelatedItems
             'config'=>$config,
             'payMethods'=>$payMethods,
             'units'=>$units,
-            'categories'=>$categories
+            'categories'=>$categories,
+            'report_types'=>$reportTypes
         ];
     }
 

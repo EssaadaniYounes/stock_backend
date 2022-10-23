@@ -22,7 +22,7 @@ class ClientsInvoicesController extends Controller
         $invoices= DB::table('clients_invoices')
             ->join('clients','clients.id','=','clients_invoices.client_id')
             ->join('users','users.id','=','clients_invoices.created_by')
-            ->selectRaw('clients_invoices.*, clients.full_name as client_name,users.name as user')
+            ->selectRaw('clients_invoices.*, clients.full_name as client_name, users.name as user')
             ->where('clients_invoices.company_id','=',$company_id)
             ->get();
 
@@ -31,6 +31,7 @@ class ClientsInvoicesController extends Controller
             'data'=>$invoices
         ],200);
     }
+
     public function relatedItems(){
         $company_id = auth()->user()->company_id;
 
@@ -41,6 +42,43 @@ class ClientsInvoicesController extends Controller
             "data"=> $data
         ],200);
     }
+
+    public function getReportData($id){
+        $company_id=auth()->user()->company_id;
+        $company_data = DB::table('companies')
+            ->where('id',$company_id)
+            ->first();
+        $invoice = DB::table('clients_invoices')
+            ->join('clients','clients.id','clients_invoices.client_id')
+            ->join('pay_methods','pay_methods.id','clients_invoices.method_id')
+            ->join('users','users.id','=','clients_invoices.created_by')
+            ->selectRaw('clients_invoices.*, clients.full_name as client_name, clients.address as client_address, pay_methods.name as method_name, users.name as created_by')
+            ->where([
+                ['clients_invoices.id',$id],
+                ['clients_invoices.company_id',$company_id]
+            ])
+            ->first();
+        $items = DB::table('clients_invoices_items')
+            ->join('products','products.id','clients_invoices_items.product_id')
+            ->join('units','units.id','products.unit_id')
+            ->selectRaw('clients_invoices_items.*, units.name as unit_name')
+            ->where([
+                ['clients_invoices_items.invoice_id',$id],
+                ['clients_invoices_items.company_id',$company_id]
+            ])
+            ->get();
+        return response()->json([
+            'success'=>true,
+            'data'=>[
+                'company'=>$company_data,
+                'invoice'=>$invoice,
+                'items'=>$items
+            ]
+        ],200);
+
+
+    }
+
 
     /**
      * Show the form for creating a new resource.

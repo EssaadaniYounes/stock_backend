@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PayMethodController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportTypesController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VendorController;
@@ -47,10 +48,12 @@ Route::resource('companies', CompanyController::class);
     Route::resource('vendors_invoices', VendorsInvoiceController::class);
     Route::resource('clients_invoices_items', ClientsInvoicesItemsController::class);
     Route::resource('vendors_invoices_items', VendorsInvoicesItemsController::class);
+    Route::resource('report_types', ReportTypesController::class);
 
     Route::post('companies/store_imgs', [CompanyController::class,'store_imgs']);
 
     Route::put('pay_methods/default/{id}', [PayMethodController::class,'makeDefault']);
+    Route::put('report_types/default/{id}', [ReportTypesController::class,'makeDefault']);
 
     Route::get('clients/balance/{id}',[ClientController::class,'getBalance']);
     Route::get('clients_invoices_items/items/{id}', [ClientsInvoicesItemsController::class,'getInvoiceItems']);
@@ -62,4 +65,5 @@ Route::resource('companies', CompanyController::class);
     Route::get('products/items/related_items', [ProductController::class,'relatedItems']);
     Route::get('vendors_invoices/items/related_items', [VendorsInvoiceController::class,'relatedItems']);
     Route::get('clients_invoices/items/related_items', [ClientsInvoicesController::class,'relatedItems']);
+    Route::get('clients_invoices/items/report_data/{id}', [ClientsInvoicesController::class,'getReportData']);
 });
