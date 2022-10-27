@@ -26,5 +26,7 @@ class Company extends Model
         'bank_iban',
         'logo',
         'init_user_id',
+        'ice',
+        'cr'
     ];
 }

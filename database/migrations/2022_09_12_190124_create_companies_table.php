@@ -32,6 +32,8 @@ class CreateCompaniesTable extends Migration
             $table->string('bank_iban')->nullable();
             $table->string('logo')->nullable();
             $table->string('init_user_id')->nullable();
+            $table->string('ice')->nullable();
+            $table->string('cr')->nullable();
             $table->timestamps();
         });
     }
