@@ -9,6 +9,7 @@ use App\Http\Controllers\ClientsInvoicesItemsController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PayMethodController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportTypesController;
 use App\Http\Controllers\RoleController;
@@ -49,6 +50,7 @@ Route::resource('companies', CompanyController::class);
     Route::resource('clients_invoices_items', ClientsInvoicesItemsController::class);
     Route::resource('vendors_invoices_items', VendorsInvoicesItemsController::class);
     Route::resource('report_types', ReportTypesController::class);
+    Route::resource('pos', PosController::class);
 
     Route::post('companies/store_imgs', [CompanyController::class,'store_imgs']);
 
@@ -66,4 +68,8 @@ Route::resource('companies', CompanyController::class);
     Route::get('vendors_invoices/items/related_items', [VendorsInvoiceController::class,'relatedItems']);
     Route::get('clients_invoices/items/related_items', [ClientsInvoicesController::class,'relatedItems']);
     Route::get('clients_invoices/items/report_data/{id}', [ClientsInvoicesController::class,'getReportData']);
+
+    //Imports
+    Route::post('products/import',[ProductController::class,'importExcel']);
+
 });

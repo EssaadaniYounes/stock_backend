@@ -19,7 +19,7 @@ class RelatedItems
             ->where('vendors.company_id','=',$this->company_id)
             ->get();
         $clients= DB::table('clients')
-            ->selectRaw('clients.id as value,clients.full_name as label')
+            ->selectRaw('clients.id as value,clients.full_name as label, init')
             ->where('clients.company_id','=',$this->company_id)
             ->get();
         $products=DB::table('products')

@@ -200,4 +200,11 @@ class ProductController extends Controller
             ],404);
         }
     }
+
+    public function importExcel(Request $request){
+        //$request has a file called fileData
+        //TODO: import the excel file and save the data
+        //and send back a response with all the items you saved
+        //to test this go to products list and click import button
+    }
 }

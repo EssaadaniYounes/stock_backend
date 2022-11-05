@@ -20,8 +20,9 @@ class ClientsInvoices extends Model
         'paid_amount',
         'rest_amount',
         'method_id',
+        'is_pos',
         'created_by',
-        'company_id'
+        'company_id',
     ];
 }
 

@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Helpers\RelatedItems;
 use App\Models\ClientsInvoices;
 use App\Models\ClientsInvoicesItems;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-class ClientsInvoicesController extends Controller
+class PosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $company_id = auth()->user()->company_id;
@@ -25,7 +20,7 @@ class ClientsInvoicesController extends Controller
             ->selectRaw('clients_invoices.*, clients.full_name as client_name, users.name as user')
             ->where([
                 ['clients_invoices.company_id',$company_id],
-                ['clients_invoices.is_pos',0]
+                ['clients_invoices.is_pos',1]
             ])
             ->get();
 
@@ -35,76 +30,13 @@ class ClientsInvoicesController extends Controller
         ],200);
     }
 
-    public function relatedItems(){
-        $company_id = auth()->user()->company_id;
-
-        $invoices = new RelatedItems();
-        $data = $invoices->invoiceRelatedItems($company_id);
-        return response()->json([
-            "success"=>true,
-            "data"=> $data
-        ],200);
-    }
-
-    public function getReportData($id){
-        $company_id=auth()->user()->company_id;
-        $company_data = DB::table('companies')
-            ->where('id',$company_id)
-            ->first();
-        $invoice = DB::table('clients_invoices')
-            ->join('clients','clients.id','clients_invoices.client_id')
-            ->join('pay_methods','pay_methods.id','clients_invoices.method_id')
-            ->join('users','users.id','=','clients_invoices.created_by')
-            ->selectRaw('clients_invoices.*, clients.full_name as client_name, clients.address as client_address, pay_methods.name as method_name, users.name as created_by')
-            ->where([
-                ['clients_invoices.id',$id],
-                ['clients_invoices.company_id',$company_id]
-            ])
-            ->first();
-        $items = DB::table('clients_invoices_items')
-            ->join('products','products.id','clients_invoices_items.product_id')
-            ->join('units','units.id','products.unit_id')
-            ->selectRaw('clients_invoices_items.*, units.name as unit_name')
-            ->where([
-                ['clients_invoices_items.invoice_id',$id],
-                ['clients_invoices_items.company_id',$company_id]
-            ])
-            ->get();
-        return response()->json([
-            'success'=>true,
-            'data'=>[
-                'company'=>$company_data,
-                'invoice'=>$invoice,
-                'items'=>$items
-            ]
-        ],200);
-
-
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $company_id=auth()->user()->company_id;
         $invoice_data = $request->invoice;
         $invoice_data['created_by'] = auth()->user()->id;
         $invoice_data['company_id'] = $company_id;
+        $invoice_data['is_pos'] = 1;
         $invoice = ClientsInvoices::create($invoice_data);
 
         $invoice_items=$request->invoice_items;
@@ -128,12 +60,6 @@ class ClientsInvoicesController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ClientsInvoices  $clientsInvoices
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $invoice= ClientsInvoices::find($id);
@@ -141,7 +67,7 @@ class ClientsInvoicesController extends Controller
             return response()->json([
                 'success'=>false,
                 'message'=>'This invoice not found!'
-                ],404);
+            ],404);
         }
         else{
             return response()->json([
@@ -150,28 +76,8 @@ class ClientsInvoicesController extends Controller
             ],200);
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ClientsInvoices  $clientsInvoices
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ClientsInvoices $clientsInvoices)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ClientsInvoices  $clientsInvoices
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //DB::table('clients_invoices_items')->where('invoice_id','=',$id)->delete();
         $invoice= ClientsInvoices::find($id);
         if(!$invoice){
             return response()->json([
@@ -219,12 +125,7 @@ class ClientsInvoicesController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ClientsInvoices  $clientsInvoices
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         $invoice = ClientsInvoices::find($id);

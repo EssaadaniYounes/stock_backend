@@ -15,6 +15,7 @@ class CreateUnitsTable extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->integer('init')->nullable()->default(0);
             $table->string('symbol')->nullable();
             $table->string('name');
             $table->string('company_id');

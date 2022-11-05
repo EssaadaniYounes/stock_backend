@@ -11,6 +11,7 @@ Role extends Model
 {
     use HasFactory;
     protected $fillable=[
+        'init',
         'role_name',
         'permissions',
         'company_id'

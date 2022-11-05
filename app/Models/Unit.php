@@ -9,6 +9,7 @@ class Unit extends Model
 {
     use HasFactory;
     protected $fillable=[
+        'init',
         'symbol',
         'name',
         'company_id'

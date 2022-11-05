@@ -9,6 +9,7 @@ class PayMethod extends Model
 {
     use HasFactory;
     protected $fillable=[
+        'init',
         'name',
         'company_id',
         'is_default'
