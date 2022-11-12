@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             CategorySeeder::class,
             UnitSeeder::class,
-            ProductSeeder::class,
             ClientSeeder::class,
             VendorSeeder::class
         ]);

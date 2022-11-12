@@ -14,14 +14,6 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        Product::create([
-            'init'=>1,
-            'barcode'=>'___',
-            'name'=>'Unknown Product',
-            'category_id'=>1,
-            'unit_id'=>1,
-            'vendor_id'=>1,
-            'company_id'=>1
-        ]);
+
     }
 }

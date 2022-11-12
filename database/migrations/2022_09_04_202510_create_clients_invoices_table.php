@@ -16,6 +16,7 @@ class CreateClientsInvoicesTable extends Migration
         Schema::create('clients_invoices', function (Blueprint $table) {
             $table->id();
             $table->string('company_id');
+            $table->integer('is_pos')->default(0);
             $table->string('client_id');
             $table->string('invoice_num');
             $table->string('notes')->nullable();
