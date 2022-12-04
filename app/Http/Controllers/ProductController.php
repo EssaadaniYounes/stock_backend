@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use mysql_xdevapi\Table;
 
 class ProductController extends Controller
 {
@@ -202,6 +203,53 @@ class ProductController extends Controller
     }
 
     public function importExcel(Request $request){
+
+
+        $file = $request->file('fileData');
+        $name = time().'.xlsx';
+        $path = public_path('documents'.DIRECTORY_SEPARATOR);
+
+
+
+        if ( $file->move($path, $name) ){
+            $inputFileName = $path.$name;
+
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+            unlink($inputFileName);
+
+            $worksheet = $spreadsheet->getActiveSheet();
+            // Get the highest row and column numbers referenced in the worksheet
+            $highestRow = $worksheet->getHighestRow(); // e.g. 10
+            $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+            $data_insert = [];
+
+            for ($row = 2; $row <= $highestRow; ++$row) {
+                $data_row = [];
+
+                $art_name = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+                if($art_name) {
+                    for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                        $value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                        $data_row[$col] = $value;
+                    }
+                    $data_insert[] = $data_row;
+
+                }
+            }
+
+            DB::table('products')->insert($data_insert);
+
+            return response()->json(
+                [
+                    'data'=> $data_insert
+                ]
+            );
+            }
+
+
+
         //$request has a file called fileData
         //TODO: import the excel file and save the data
         //and send back a response with all the items you saved
