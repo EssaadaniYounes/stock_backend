@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PayMethodController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportTypesController;
 use App\Http\Controllers\RoleController;
@@ -17,7 +18,6 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorsInvoiceController;
 use App\Http\Controllers\VendorsInvoicesItemsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,11 +51,13 @@ Route::resource('companies', CompanyController::class);
     Route::resource('vendors_invoices_items', VendorsInvoicesItemsController::class);
     Route::resource('report_types', ReportTypesController::class);
     Route::resource('pos', PosController::class);
+    Route::resource('printers', PrinterController::class);
 
     Route::post('companies/store_imgs', [CompanyController::class,'store_imgs']);
 
     Route::put('pay_methods/default/{id}', [PayMethodController::class,'makeDefault']);
     Route::put('report_types/default/{id}', [ReportTypesController::class,'makeDefault']);
+    Route::put('printers/default/{id}', [PrinterController::class,'makeDefault']);
 
     Route::get('clients/balance/{id}',[ClientController::class,'getBalance']);
     Route::get('clients_invoices_items/items/{id}', [ClientsInvoicesItemsController::class,'getInvoiceItems']);

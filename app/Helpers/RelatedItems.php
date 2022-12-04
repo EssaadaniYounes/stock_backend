@@ -62,7 +62,7 @@ class RelatedItems
 
     public function clientsVendorsRelatedItems(){
         $cities = DB::table('cities')
-            ->selectRaw('cities.id as value,cities.name as label')
+            ->selectRaw('cities.id as value,cities.name as label, cities.init')
             ->where('cities.company_id','=',$this->company_id)
             ->get();
         return $cities;

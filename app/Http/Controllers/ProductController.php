@@ -36,19 +36,19 @@ class ProductController extends Controller
     {
         $company_id = auth()->user()->company_id;
         $units = DB::table('units')
-        ->selectRaw('units.id as value,units.name as label')
+        ->selectRaw('units.id as value,units.name as label, units.init')
             ->where('units.company_id','=',$company_id)
         ->get();
         $categories = DB::table('categories')
-            ->selectRaw('categories.id as value,categories.name as label')
+            ->selectRaw('categories.id as value,categories.name as label, categories.init')
             ->where('categories.company_id','=',$company_id)
             ->get();
         $vendors = DB::table('vendors')
-            ->selectRaw('vendors.id as value,vendors.full_name as label')
+            ->selectRaw('vendors.id as value,vendors.full_name as label, vendors.init')
             ->where('vendors.company_id','=',$company_id)
             ->get();
         $cities = DB::table('cities')
-            ->selectRaw('cities.id as value,cities.name as label')
+            ->selectRaw('cities.id as value,cities.name as label, cities.init')
             ->where('cities.company_id','=',$company_id)
             ->get();
 

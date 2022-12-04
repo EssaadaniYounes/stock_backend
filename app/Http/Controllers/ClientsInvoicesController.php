@@ -61,6 +61,7 @@ class ClientsInvoicesController extends Controller
                 ['clients_invoices.company_id',$company_id]
             ])
             ->first();
+        //TODO: Add Printing in pos
         $items = DB::table('clients_invoices_items')
             ->join('products','products.id','clients_invoices_items.product_id')
             ->join('units','units.id','products.unit_id')

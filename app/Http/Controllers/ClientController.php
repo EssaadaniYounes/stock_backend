@@ -26,7 +26,7 @@ class ClientController extends Controller
     {
 
         $cities = DB::table('cities')
-            ->selectRaw('cities.id as value,cities.name as label')
+            ->selectRaw('cities.id as value,cities.name as label, cities.init')
             ->where('cities.company_id','=',auth()->user()->company_id)
             ->get();
 
